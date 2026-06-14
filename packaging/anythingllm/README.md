@@ -23,4 +23,14 @@ The Claude-Code-workflow-specific skills (`using-git-worktrees`, `dispatching-pa
 - Small local models follow system-prompt discipline less reliably than hosted Claude — see `IMPORT.md` for tuning levers (pin specific skill bodies, shorten the dispatcher).
 - Tool-heavy MCP servers can overflow a small local model's context in agent mode; enable MCP servers selectively per task.
 
+## Host compatibility
+
+This package is just a **system prompt + documents**, so it's host- and model-agnostic — it runs anywhere you can set a system prompt and (optionally) attach docs. The folder is named `anythingllm` because that was the first target, not because it's required.
+
+- **AnythingLLM** — the documented flow in [`IMPORT.md`](IMPORT.md): paste the dispatcher into the workspace prompt, upload the skill docs, pin `00-INDEX.md`.
+- **LM Studio (or any local runtime)** — paste `SYSTEM-PROMPT.md` into the model's **system prompt** field (or a preset), and attach `skills/*.md` via *Chat with Documents* for retrieval. No "pin" step needed: the catalog already lives in the system prompt, so you get the discipline even with no docs attached — attaching them just adds the full skill bodies.
+- **Any quantization** (Unsloth GGUF, QAT, etc.) — the weights don't matter; the runtime serves the prompt.
+
+> Note: small local models follow system-prompt discipline less reliably than hosted Claude. To make it robust even under context pressure, the methodology could instead be **fine-tuned into the model** (e.g. a LoRA via [Unsloth](https://github.com/unslothai/unsloth)) rather than prompt-injected — a natural next step for a dedicated local companion.
+
 See [`IMPORT.md`](IMPORT.md) to set it up.
